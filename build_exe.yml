@@ -1,0 +1,25 @@
+name: youtube-feed-fix Build
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Zip Extension
+        run: |
+          zip -r youtube-feed-fix.zip . -x "*.git*" ".github*" "README.md"
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: youtube-feed-fix.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
